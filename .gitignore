@@ -1,0 +1,6 @@
+__pycache__
+*venv
+.env
+discord_bot/.env
+discord_bot/Dockerfile
+discord_bot/db_ip_addr
