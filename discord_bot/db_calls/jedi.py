@@ -70,3 +70,15 @@ def jedi_plan():
         message +="\n"
         
     return message
+                            # AND NOT EXISTS (
+                            #     SELECT 1
+                            #     FROM platoons p2 
+                            #     LEFT JOIN units u2 ON p2.character_name = u2.character_name
+                            #     WHERE p2.phase < 4
+                            #         AND (
+                            #         (p.phase = 1 AND (u2.r5 IS NULL OR u2.r5 = 0))
+                            #         OR (p.phase = 2 AND (u2.r6 IS NULL OR u2.r6 = 0))
+                            #         OR (p.phase = 3 AND (u2.r7 IS NULL OR u2.r7 = 0))
+                            #         OR (p.phase = 4 AND (u2.r8 IS NULL OR u2.r8 = 0))
+                            #         OR (p.phase > 4 AND (u2.r9 IS NULL OR u2.r9 = 0))
+                            #     )

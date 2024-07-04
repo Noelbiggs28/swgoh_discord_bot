@@ -27,7 +27,7 @@ def update_roster():
     def get_swgoh_player_data(ally_codes):
         all_units = {"r5": defaultdict(int),"r6": defaultdict(int),"r7": defaultdict(int),"r8": defaultdict(int),"r9": defaultdict(int)}
         for code in ally_codes:
-            print(code)
+
             url = f"https://swgoh.gg/api/player/{code}/"
         
             try:

@@ -49,6 +49,7 @@ def sith_plan():
     relics = 1
     planets = ['Mustafar', 'Corellia', 'Coruscant', 'Geonosis', 'Felucia', 'Bracca', 'Dathomir', 'Tatooine', 'Kashyyyk']# 'Zeffo', 'Haven-class Medical Station', 'Kessel', 'Lothal', 'Malachor', 'Vandor', 'Ring of Kafrene', 'Death Star', 'Hoth', 'Scarif']
     for planet in planets:
+        print(planet)
         message += f'{planet}\n'
         relic_words = "Relic 5+" if relics < 4 else "Relic 6+" if relics < 7 else "relic 7+"
         message += f'{relic_words}\n'
