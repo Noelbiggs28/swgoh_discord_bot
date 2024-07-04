@@ -47,16 +47,19 @@ def sith_plan():
         return "all missions doable"
     message = f""
     relics = 1
-    planets = ['Mustafar', 'Corellia', 'Coruscant', 'Geonosis', 'Felucia', 'Bracca', 'Dathomir', 'Tatooine', 'Kashyyyk']# 'Zeffo', 'Haven-class Medical Station', 'Kessel', 'Lothal', 'Malachor', 'Vandor', 'Ring of Kafrene', 'Death Star', 'Hoth', 'Scarif']
-    for planet in planets:
-        print(planet)
-        message += f'{planet}\n'
+    planets = {'Mustafar':[], 'Corellia':[], 'Coruscant':[], 'Geonosis':[], 'Felucia':[], 'Bracca':{}, 'Dathomir':[], 'Tatooine':[], 'Kashyyyk':[]}# 'Zeffo', 'Haven-class Medical Station', 'Kessel', 'Lothal', 'Malachor', 'Vandor', 'Ring of Kafrene', 'Death Star', 'Hoth', 'Scarif']
+    for planet in planets.keys():
         relic_words = "Relic 5+" if relics < 4 else "Relic 6+" if relics < 7 else "relic 7+"
-        message += f'{relic_words}\n'
-        
+ 
         for unit in results['impossible_ops']:
             if unit[0] == planet:
-                message += f"Operation: {unit[1]}, {''.join(unit[2])}\n"
+                planets[planet].append((unit[1],"".join(unit[2])))
+
+        if len(planets[planet]) > 0:
+            message += f'{planet}\n{relic_words}\n'
+            for pair in planets[planet]:
+                message+=f'Operation: {pair[0]} {pair[1]}\n'
+
         relics += 1
         message +="\n"
     return message
