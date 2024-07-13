@@ -9,6 +9,7 @@ from db_calls.planet_check import planet_check
 from db_calls.ops_check import ops_check
 from db_calls.jedi import jedi_plan
 from db_calls.planets import planets_check
+from db_calls.rare import rare_plan
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -57,6 +58,12 @@ async def sith(ctx):
 @bot.command()
 async def jedi(ctx):
     x = jedi_plan()
+    await send_message(ctx, x)
+
+
+@bot.command()
+async def rare(ctx):
+    x = rare_plan()
     await send_message(ctx, x)
 
 @bot.command()

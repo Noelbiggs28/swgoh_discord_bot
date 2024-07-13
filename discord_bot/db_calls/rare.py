@@ -1,6 +1,6 @@
 import psycopg2
 import os
-def jedi_plan():
+def rare_plan():
     HOST = open("db_ip_addr").read().rstrip()
     PORT = os.environ.get('PORT')
     USER = os.environ.get('USER')
@@ -31,7 +31,7 @@ def jedi_plan():
                            
                             GROUP BY p.planet,p.character_name,p.phase, u.r5, u.r6, u.r7, u.r8
                             ) as a
-                            WHERE a.r_value < a.count
+                            WHERE a.r_value = a.count
                             ORDER BY a.planet
                             ;""")
             units = cursor.fetchall()
@@ -39,7 +39,7 @@ def jedi_plan():
     needed_units = {'needed_units': units if units else "doable"}
     if needed_units['needed_units']== "doable":
         return "all misions doable"
-    message = f"Units where needed - have > 0\n"
+    message = f"Units where needed - have = 0\n"
     planets = set()
     for unit in needed_units['needed_units']:
         relic_words = "Relic 5+" if unit[3] == 1 else "Relic 6+" if unit[3] == 2 else "Relic 7+" if unit[3] == 3 else "Relic 8+" if unit[3] == 4 else "relic 9"
