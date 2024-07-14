@@ -48,10 +48,10 @@ ORDER BY ap.needed;""",(planet_name,))
 
     for unit in planet_info['units']:
         if all==True:
-            if int(unit[1]) < int(unit[2]):
-                message += f'{unit[0]}, {unit[1]}, {unit[2]}\n'
+            if int(unit[2]) < int(unit[1]):
+                message += f'{unit[0]}, {unit[2]}, {unit[1]}\n'
         else:
-            message += f'{unit[0]}, {unit[1]}, {unit[2]}\n'
+            message += f'{unit[0]}, {unit[2]}, {unit[1]}\n'
   
     return message
                                     
