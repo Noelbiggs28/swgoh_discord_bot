@@ -56,13 +56,10 @@ async def ops(ctx,planet_name):
 
 @bot.command()
 async def sith(ctx):
-    x = sith_plan()
-    await send_message(ctx, x)
-
-@bot.command()
-async def sith2(ctx):
     x = sith2_plan()
     await send_message(ctx, x)
+
+
 
 
 @bot.command()

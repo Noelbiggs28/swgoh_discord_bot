@@ -15,25 +15,34 @@ def rare_plan():
 
     ) as conn:
         with conn.cursor() as cursor:
-            cursor.execute("""SELECT a.planet, a.character_name, operations, a.phase, a.r_value, a.count
-                            FROM(
-                            SELECT p.planet, p.character_name, STRING_AGG(p.operations::VARCHAR, ', ') AS operations, p.phase, u.r5, u.r6, u.r7,
-                                    COUNT(*) AS count,
-                                    CASE 
-                                        WHEN p.phase = 1 THEN u.r5
-                                        WHEN p.phase = 2 THEN u.r6
-                                        WHEN p.phase = 3 THEN u.r7
-                                        ELSE u.r8
-                                    END AS r_value
-                            FROM platoons p 
-                            LEFT JOIN units u ON p.character_name = u.character_name
-                            WHERE p.phase < 4  
-                           
-                            GROUP BY p.planet,p.character_name,p.phase, u.r5, u.r6, u.r7, u.r8
-                            ) as a
-                            WHERE a.r_value = a.count
-                            ORDER BY a.planet
-                            ;""")
+            cursor.execute("""
+WITH aggregated_platoons AS (
+SELECT p.planet, p.character_name, 
+    STRING_AGG(p.operations::VARCHAR, ', ') AS operations, 
+    p.phase, 
+    COUNT(*) AS count
+FROM 
+    platoons p
+WHERE 
+    p.phase < 4
+AND p.planet != 'Zeffo'
+GROUP BY 
+    p.planet, p.character_name, p.phase
+)
+SELECT ap.planet, ap.character_name, ap.operations, ap.phase, ap.count, 
+    COUNT(CASE WHEN pu.relic > ap.phase + 3 THEN 1 ELSE NULL END) AS character_count
+FROM 
+    aggregated_platoons ap
+LEFT JOIN 
+    playerunits pu 
+ON 
+    ap.character_name = pu.character_name
+GROUP BY 
+ap.planet, ap.character_name, ap.operations, ap.phase, ap.count
+HAVING 
+    COUNT(CASE WHEN pu.relic > ap.phase + 3 THEN 1 ELSE NULL END) = ap.count
+order by planet
+;""")
             units = cursor.fetchall()
     conn.close()
     needed_units = {'needed_units': units if units else "doable"}
