@@ -2,14 +2,15 @@ from discord.ext import commands
 import discord
 import os
 import random
-from db_calls.sith import sith_plan
-from db_calls.update_roster import update_roster
+
 from db_calls.how_many import get_number
-from db_calls.planet_check import planet_check
-from db_calls.ops_check import ops_check
-from db_calls.jedi import jedi_plan
-from db_calls.planets import planets_check
 from db_calls.rare import rare_plan
+from db_calls.update_units import update_units
+from db_calls.assign import assign_plan
+from db_calls.jedi2 import jedi2_plan
+from db_calls.sith2 import sith2_plan
+from db_calls.planet_check2 import planet_check2
+from db_calls.planets2 import planets_check2
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -31,35 +32,29 @@ async def list(ctx, what_list):
     await send_message(ctx, x)
 
 @bot.command()
-async def how_many(ctx,relic_level, unit_name):
-    x = get_number(relic_level, unit_name)
+async def how_many(ctx,unit_name):
+    x = get_number(unit_name)
     await send_message(ctx, x)
 
 @bot.command()
 async def planet(ctx,planet_name, all=True):
-    x = planet_check(planet_name, all)
+    x = planet_check2(planet_name, all)
     await send_message(ctx, x)
 
 @bot.command()
 async def planets(ctx,planet1, planet2, all=True):
-    x = planets_check(planet1, planet2, all)
-    await send_message(ctx, x)
-
-@bot.command()
-async def ops(ctx,planet_name):
-    x = ops_check(planet_name)
+    x = planets_check2(planet1, planet2, all)
     await send_message(ctx, x)
 
 @bot.command()
 async def sith(ctx):
-    x = sith_plan()
+    x = sith2_plan()
     await send_message(ctx, x)
 
 @bot.command()
 async def jedi(ctx):
-    x = jedi_plan()
+    x = jedi2_plan()
     await send_message(ctx, x)
-
 
 @bot.command()
 async def rare(ctx):
@@ -69,8 +64,13 @@ async def rare(ctx):
 @bot.command()
 async def update(ctx):
     await send_message(ctx, "This takes like 30 seconds")
-    update_roster()
+    update_units()
     await send_message(ctx, "guild updated")
+
+@bot.command()
+async def assign(ctx):
+    x = assign_plan()
+    await send_message(ctx, x)
 
 @bot.command()
 async def Ezls(ctx, crate):

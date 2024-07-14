@@ -1,6 +1,6 @@
 import psycopg2
 import os
-def sith_plan():
+def sith2_plan():
     HOST = open("db_ip_addr").read().rstrip()
     PORT = os.environ.get('PORT')
     USER = os.environ.get('USER')
@@ -14,30 +14,19 @@ def sith_plan():
     password = PASSWORD
     ) as conn:
         with conn.cursor() as cursor:
-            cursor.execute("""SELECT 
-                                p.planet, 
-                                p.operations, 
-                                STRING_AGG(p.character_name, ', ') AS character_names
-                            FROM 
-                                platoons p
-                            LEFT JOIN 
-                                units u ON p.character_name = u.character_name
-                            WHERE 
-                                p.phase < 4
-                            AND (
-                                (p.phase = 1 AND (u.r5 IS NULL OR u.r5 = 0))
-                                OR (p.phase = 2 AND (u.r6 IS NULL OR u.r6 = 0))
-                                OR (p.phase = 3 AND (u.r7 IS NULL OR u.r7 = 0))
-                                OR (p.phase = 4 AND (u.r8 IS NULL OR u.r8 = 0))
-                                OR (p.phase > 4 AND (u.r9 IS NULL OR u.r9 = 0))
-                            )
-                            GROUP BY 
-                                p.planet,
-                                p.phase,
-                                p.operations
-                                
-                            ORDER BY 
-                                p.operations;""")
+            cursor.execute("""
+WITH playersunits AS(
+Select character_name, max(relic) as maxrelic from playerunits
+group by character_name
+)
+SELECT p.planet,p.phase, p.operations, p.character_name, maxrelic
+FROM platoons p
+LEFT JOIN playersunits pu ON p.character_name=pu.character_name
+WHERE p.phase < 4
+AND p.planet !='Zeffo'
+AND maxrelic < p.phase+4
+GROUP BY p.phase,p.planet, p.operations, p.character_name, maxrelic
+;""")
             units = cursor.fetchall()
     conn.close()    
     
@@ -53,7 +42,7 @@ def sith_plan():
  
         for unit in results['impossible_ops']:
             if unit[0] == planet:
-                planets[planet].append((unit[1],"".join(unit[2])))
+                planets[planet].append((unit[2],"".join(unit[3])))
 
         if len(planets[planet]) > 0:
             message += f'{planet}\n{relic_words}\n'

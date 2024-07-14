@@ -16,14 +16,13 @@ CREATE TABLE PLAYERS (
     ally_code VARCHAR(50)
 );
 
-CREATE TABLE UNITS (
+
+CREATE TABLE PLAYERUNITS (
     id SERIAL PRIMARY KEY,
+    player_name VARCHAR(50),
     character_name VARCHAR(50),
-    r5 INTEGER,
-    r6 INTEGER,
-    r7 INTEGER,
-    r8 INTEGER,
-    r9 INTEGER
+    relic INTEGER,
+    rarity INTEGER
 );
 
 
