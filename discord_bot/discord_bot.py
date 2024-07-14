@@ -14,6 +14,7 @@ from db_calls.update_units import update_units
 from db_calls.assign import assign_plan
 from db_calls.jedi2 import jedi2_plan
 from db_calls.sith2 import sith2_plan
+from db_calls.planet_check2 import planet_check2
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -45,6 +46,11 @@ async def planet(ctx,planet_name, all=True):
     await send_message(ctx, x)
 
 @bot.command()
+async def planet2(ctx,planet_name, all=True):
+    x = planet_check2(planet_name, all)
+    await send_message(ctx, x)
+
+@bot.command()
 async def planets(ctx,planet1, planet2, all=True):
     x = planets_check(planet1, planet2, all)
     await send_message(ctx, x)
@@ -58,9 +64,6 @@ async def ops(ctx,planet_name):
 async def sith(ctx):
     x = sith2_plan()
     await send_message(ctx, x)
-
-
-
 
 @bot.command()
 async def jedi(ctx):
