@@ -42,11 +42,6 @@ async def how_many(ctx,unit_name):
 
 @bot.command()
 async def planet(ctx,planet_name, all=True):
-    x = planet_check(planet_name, all)
-    await send_message(ctx, x)
-
-@bot.command()
-async def planet2(ctx,planet_name, all=True):
     x = planet_check2(planet_name, all)
     await send_message(ctx, x)
 

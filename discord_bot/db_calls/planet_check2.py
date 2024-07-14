@@ -14,23 +14,31 @@ def planet_check2(planet_name, all):
     password = PASSWORD
     ) as conn:
         with conn.cursor() as cursor:
-            cursor.execute("""SELECT  p.character_name, CASE 
-                                        WHEN p.phase = 1 THEN COALESCE(u.r5,0)
-                                        WHEN p.phase = 2 THEN COALESCE(u.r6,0)
-                                        WHEN p.phase = 3 THEN COALESCE(u.r7,0)
-                                        ELSE COALESCE(u.r8,0)
-                                    END AS relic, COUNT(*) AS character_count
-                            FROM platoons p
-                            LEFT JOIN units u 
-                            ON p.character_name = u.character_name
-                            WHERE planet ILIKE %s
-                            GROUP BY p.character_name, relic
-                            ORDER BY CASE 
-                                        WHEN p.phase = 1 THEN COALESCE(u.r5,0)
-                                        WHEN p.phase = 2 THEN COALESCE(u.r6,0)
-                                        WHEN p.phase = 3 THEN COALESCE(u.r7,0)
-                                        ELSE COALESCE(u.r8,0)
-                                    END;""",(planet_name,))
+            cursor.execute("""WITH aggregated_platoons AS (
+    SELECT 
+        p.character_name, 
+        p.phase, 
+        COUNT(*) AS needed
+    FROM 
+        platoons p
+    WHERE 
+        p.planet ILIKE %s
+    GROUP BY 
+        p.character_name, 
+        p.phase  
+)
+SELECT 
+    ap.character_name, 
+    ap.needed, 
+    COUNT(CASE WHEN pu.relic > ap.phase + 3 THEN 1 ELSE NULL END) AS character_count
+FROM 
+    aggregated_platoons ap
+LEFT JOIN 
+    playerunits pu ON ap.character_name = pu.character_name
+GROUP BY 
+    ap.character_name, 
+    ap.needed
+ORDER BY ap.needed;""",(planet_name,))
             units = cursor.fetchall()
         
     conn.close()
