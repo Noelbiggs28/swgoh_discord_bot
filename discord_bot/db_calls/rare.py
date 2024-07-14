@@ -17,20 +17,30 @@ def rare_plan():
         with conn.cursor() as cursor:
             cursor.execute("""
 WITH aggregated_platoons AS (
-SELECT p.planet, p.character_name, 
-    STRING_AGG(p.operations::VARCHAR, ', ') AS operations, 
-    p.phase, 
-    COUNT(*) AS count
-FROM 
-    platoons p
-WHERE 
-    p.phase < 4
-AND p.planet != 'Zeffo'
-GROUP BY 
-    p.planet, p.character_name, p.phase
+    SELECT 
+        p.planet, 
+        p.character_name, 
+        STRING_AGG(p.operations::VARCHAR, ', ') AS operations, 
+        p.phase, 
+        COUNT(*) AS count
+    FROM 
+        platoons p
+    WHERE 
+        p.phase < 4
+        AND p.planet != 'Zeffo'
+    GROUP BY 
+        p.planet, 
+        p.character_name, 
+        p.phase
 )
-SELECT ap.planet, ap.character_name, ap.operations, ap.phase, ap.count, 
-    COUNT(CASE WHEN pu.relic > ap.phase + 3 THEN 1 ELSE NULL END) AS character_count
+SELECT 
+    ap.planet, 
+    ap.character_name, 
+    ap.operations, 
+    ap.phase, 
+    ap.count, 
+    COUNT(CASE WHEN pu.relic > ap.phase + 3 THEN 1 ELSE NULL END) AS character_count,
+    STRING_AGG(CASE WHEN pu.relic > ap.phase + 3 THEN pu.player_name ELSE NULL END, ', ') AS players
 FROM 
     aggregated_platoons ap
 LEFT JOIN 
@@ -38,11 +48,15 @@ LEFT JOIN
 ON 
     ap.character_name = pu.character_name
 GROUP BY 
-ap.planet, ap.character_name, ap.operations, ap.phase, ap.count
+    ap.planet, 
+    ap.character_name, 
+    ap.operations, 
+    ap.phase, 
+    ap.count
 HAVING 
     COUNT(CASE WHEN pu.relic > ap.phase + 3 THEN 1 ELSE NULL END) = ap.count
-order by planet
-;""")
+ORDER BY 
+    ap.planet;""")
             units = cursor.fetchall()
     conn.close()
     needed_units = {'needed_units': units if units else "doable"}
@@ -62,7 +76,7 @@ order by planet
             message += f'{planet[0]}\n{planet[1]}\n'
             for unit in needed_units['needed_units']:
                 if unit[0] == planet[0]:
-                    message += f"Unit: {unit[1]}, Have: {unit[4]} Need: {unit[5]} Operations: {''.join(unit[2])}\n"
+                    message += f"{unit[1]} Operations: {''.join(unit[2])} Players: {''.join(unit[6])}\n"
             message +="\n"
         
     return message
