@@ -54,9 +54,10 @@ GROUP BY
     ap.phase, 
     ap.count
 HAVING 
-    COUNT(CASE WHEN pu.relic > ap.phase + 3 THEN 1 ELSE NULL END) = ap.count
+    COUNT(CASE WHEN pu.relic > ap.phase + 3 THEN 1 ELSE NULL END) <= ap.count
 ORDER BY 
-    ap.planet;""")
+    ap.planet;
+""")
             units = cursor.fetchall()
     conn.close()
     needed_units = {'needed_units': units if units else "doable"}
