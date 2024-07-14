@@ -1,6 +1,6 @@
 import psycopg2
 import os
-def get_number(character_name):
+def assign_plan():
     HOST = open("db_ip_addr").read().rstrip()
     PORT = os.environ.get('PORT')
     USER = os.environ.get('USER')
@@ -15,10 +15,10 @@ def get_number(character_name):
 
     ) as conn:
         with conn.cursor() as cursor:
-            cursor.execute(f"SELECT player_name, relic, rarity  FROM playerunits WHERE character_name ILIKE %s order by relic desc,rarity desc", (character_name,))
+            cursor.execute("""SELECT * from playerunits""")
             units = cursor.fetchall()
     conn.close()
-    message=""
-    for unit in units:
-        message+=f"{unit[0]}: relic {unit[1]}, stars {unit[2]}\n"
+    print(units)
+    message="done"
+        
     return message

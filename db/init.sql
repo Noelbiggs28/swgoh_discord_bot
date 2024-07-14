@@ -26,6 +26,14 @@ CREATE TABLE UNITS (
     r9 INTEGER
 );
 
+CREATE TABLE PLAYERUNITS (
+    id SERIAL PRIMARY KEY,
+    player_name VARCHAR(50),
+    character_name VARCHAR(50),
+    relic INTEGER,
+    rarity INTEGER
+);
+
 
 \COPY platoons FROM '/docker-entrypoint-initdb.d/units_by_platoons.csv' WITH CSV HEADER;
 \COPY players FROM '/docker-entrypoint-initdb.d/players.csv' WITH CSV HEADER;

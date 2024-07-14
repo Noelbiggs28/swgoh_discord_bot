@@ -4,3 +4,4 @@ __pycache__
 discord_bot/.env
 discord_bot/Dockerfile
 discord_bot/db_ip_addr
+practice
