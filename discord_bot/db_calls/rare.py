@@ -77,7 +77,7 @@ ORDER BY
             message += f'{planet[0]}\n{planet[1]}\n'
             for unit in needed_units['needed_units']:
                 if unit[0] == planet[0]:
-                    message += f"{unit[1]} Operations: {''.join(unit[2])} Players: {''.join(unit[6])}\n"
+                    message += f"{unit[1]} Operations: {''.join(unit[2])} Players: {''.join(unit[6] if unit[6] else '')}\n"
             message +="\n"
         
     return message
