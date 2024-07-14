@@ -13,6 +13,7 @@ from db_calls.rare import rare_plan
 from db_calls.update_units import update_units
 from db_calls.assign import assign_plan
 from db_calls.jedi2 import jedi2_plan
+from db_calls.sith2 import sith2_plan
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -56,6 +57,11 @@ async def ops(ctx,planet_name):
 @bot.command()
 async def sith(ctx):
     x = sith_plan()
+    await send_message(ctx, x)
+
+@bot.command()
+async def sith2(ctx):
+    x = sith2_plan()
     await send_message(ctx, x)
 
 
