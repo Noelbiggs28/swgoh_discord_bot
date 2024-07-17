@@ -11,6 +11,7 @@ from db_calls.jedi2 import jedi2_plan
 from db_calls.sith2 import sith2_plan
 from db_calls.planet_check2 import planet_check2
 from db_calls.planets2 import planets_check2
+from db_calls.where import where_at
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
@@ -34,6 +35,11 @@ async def list(ctx, what_list):
 @bot.command()
 async def how_many(ctx,unit_name):
     x = get_number(unit_name)
+    await send_message(ctx, x)
+
+@bot.command()
+async def where(ctx,unit_name):
+    x = where_at(unit_name)
     await send_message(ctx, x)
 
 @bot.command()
