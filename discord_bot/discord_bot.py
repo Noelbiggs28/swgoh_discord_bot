@@ -1,5 +1,6 @@
-from discord.ext import commands
 import discord
+from discord.ext import commands
+from discord import app_commands
 import os
 import random
 
@@ -15,6 +16,7 @@ from db_calls.where import where_at
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
+
 async def send_message(ctx, message):
     print("ping")
     if str(ctx.channel) == "bot_test" or str(ctx.channel) == "swgoh-bot-channel":
@@ -25,12 +27,32 @@ async def send_message(ctx, message):
             chunks = [x[i:i+2000] for i in range(0, len(x), 2000)]
             for chunk in chunks:
                 await ctx.send(chunk)
+                
+@bot.command()
+async def syncc(ctx):
+    synced = await bot.tree.sync()
+    await send_message(ctx, "done")
+
+@bot.tree.command(name="hello")
+async def hello(interaction: discord.Interaction):
+    await interaction.response.send_message(f"hello {interaction.user.mention}", ephemeral=True)
+
+@bot.tree.command(name="sith2")
+async def sith2(interaction: discord.Interaction):
+    x = sith2_plan()
+    await interaction.response.send_message(f"{x}", ephemeral=True)
+
+# @bot.command()
+# async def sith(ctx):
+#     x = sith2_plan()
+#     await send_message(ctx, x)
 
 @bot.command()
 async def list(ctx, what_list):
     if what_list == "planets":
         x = 'Mustafar, Corellia, Coruscant, Geonosis, Felucia, Bracca, Dathomir, Tatooine, Kashyyyk, Zeffo, Haven-class Medical Station, Kessel, Lothal, Malachor, Vandor, Ring of Kafrene, Death Star, Hoth, Scarif'
     await send_message(ctx, x)
+
 
 @bot.command()
 async def how_many(ctx,unit_name):
